@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Solar system</title>
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #000;
+            overflow: hidden;
+        }
+
+        .container {
+            font-size: 10px;
+            width: 40em;
+            height: 40em;
+            position: relative;
+        }
+
+        .sun {
+            position: absolute;
+            width: 35em;
+            height: 35em;
+            background-color: yellow;
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .clickable-area {
+            position: absolute;
+            width: 3em;
+            height: 3em;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            cursor: pointer;
+        }
+
+        .black-dot {
+            position: absolute;
+            width: 1em;
+            height: 1em;
+            background-color: black;
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        @keyframes orbit {
+            to {
+                transform: translate(30em, -20em);
+            }
+        }
+body {
+    font-family: sans-serif;
+    background-color: black;
+    font-weight: bold;
+}
+
+.text-box {
+    margin-left: 44vw;
+   margin-top: 42vh;
+}
+
+.btn:link,
+.btn:visited {
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 15px 40px;
+    display: inline-block;
+    border-radius: 100px;
+    transition: all .2s;
+    position: absolute;
+}
+
+.btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.btn:active {
+    transform: translateY(-1px);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+}
+
+.btn-white {
+    background-color: #fff;
+    color: #777;
+}
+
+.btn::after {
+    content: "";
+    display: inline-block;
+    height: 100%;
+    width: 100%;
+    border-radius: 100px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    transition: all .4s;
+}
+
+.btn-white::after {
+    background-color: #fff;
+}
+
+.btn:hover::after {
+    transform: scaleX(1.4) scaleY(1.6);
+    opacity: 0;
+}
+
+.btn-animated {
+    animation: moveInBottom 5s ease-out;
+    animation-fill-mode: backwards;
+}
+
+@keyframes moveInBottom {
+    0% {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0px);
+    }
+}
+
+    </style>
+</head>
+<body>
+    <header>
+	<div class="text-box">
+    <a href="./othergame.html" class="btn btn-white btn-        animate">Diğer oyun</a>
+</div>
+        <div class="container">
+            <div class="sun"></div>
+        </div>
+    </header>
+    <script>
+        let gameRunning = true;
+
+        function getRandomInt(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        function createBlackDot() {
+            if (!gameRunning) return;
+
+            const container = document.querySelector('.container');
+            const clickableArea = document.createElement('div');
+            clickableArea.classList.add('clickable-area');
+            container.appendChild(clickableArea);
+
+            const blackDot = document.createElement('div');
+            blackDot.classList.add('black-dot');
+            clickableArea.appendChild(blackDot);
+
+            const randomAngle = getRandomInt(0, 360);
+            clickableArea.style.top = '50%';
+            clickableArea.style.left = '50%';
+            clickableArea.style.transform = `rotate(${randomAngle}deg) translate(20em) rotate(-${randomAngle}deg)`;
+            clickableArea.style.animation = `orbit 5s linear`;
+
+            clickableArea.addEventListener('click', () => {
+                alert('Oyunu kazandın!');
+                gameRunning = false;
+                const computedStyle = window.getComputedStyle(clickableArea);
+                clickableArea.style.animation = 'none';
+                clickableArea.style.transform = computedStyle.transform;
+            });
+
+            clickableArea.addEventListener('animationend', () => {
+                if (gameRunning) {
+                    container.removeChild(clickableArea);
+                    createBlackDot();
+                }
+            });
+        }
+
+        createBlackDot();
+    </script>
+</body>
+</html>
